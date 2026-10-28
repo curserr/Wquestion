@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Little Question</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #fce7f3, #ede9fe);
+      color: #28243b;
+    }
+
+    .card {
+      width: min(90vw, 520px);
+      padding: 3rem 2rem;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 28px;
+      box-shadow: 0 20px 60px rgba(70, 40, 100, 0.14);
+    }
+
+    .emoji { font-size: 3rem; margin-bottom: 0.8rem; }
+
+    h1 {
+      margin: 0 0 2rem;
+      font-size: clamp(1.6rem, 5vw, 2.3rem);
+      line-height: 1.2;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      min-height: 58px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 0.9rem 1.8rem;
+      font: inherit;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+      box-shadow: 0 7px 18px rgba(40, 30, 70, 0.13);
+    }
+
+    #yes {
+      background: #8b5cf6;
+      color: white;
+    }
+
+    #yes:hover { transform: translateY(-2px); }
+
+    #no {
+      background: #f3f4f6;
+      color: #373347;
+      position: relative;
+      z-index: 2;
+      touch-action: manipulation;
+    }
+
+    #message {
+      min-height: 1.5em;
+      margin: 1.5rem 0 0;
+      color: #6d28d9;
+      font-weight: 650;
+    }
+
+    @media (max-width: 420px) {
+      .card { padding: 2.4rem 1.2rem; }
+      .buttons { gap: 0.65rem; }
+      button { padding: 0.8rem 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="emoji" aria-hidden="true">💭</div>
+    <h1 id="question">EIMAI MIA XONTRH POYTANA ME KARKINO?</h1>
+    <div class="buttons" id="buttonArea">
+      <button id="yes" type="button">Yes!</button>
+      <button id="no" type="button">No</button>
+    </div>
+    <p id="message" aria-live="polite"></p>
+  </main>
+
+  <script>
+    const noButton = document.getElementById("no");
+    const yesButton = document.getElementById("yes");
+    const message = document.getElementById("message");
+
+    function moveNoButton() {
+      // Move it to a random safe spot in the visible viewport.
+      noButton.style.position = "fixed";
+      const padding = 16;
+      const maxX = Math.max(padding, window.innerWidth - noButton.offsetWidth - padding);
+      const maxY = Math.max(padding, window.innerHeight - noButton.offsetHeight - padding);
+      const x = padding + Math.random() * (maxX - padding);
+      const y = padding + Math.random() * (maxY - padding);
+      noButton.style.left = `${x}px`;
+      noButton.style.top = `${y}px`;
+    }
+
+    // On desktop, move away as the pointer approaches; on touch screens,
+    // move away when someone tries to tap it.
+    noButton.addEventListener("pointerenter", (event) => {
+      if (event.pointerType === "mouse") moveNoButton();
+    });
+    noButton.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      moveNoButton();
+    });
+    noButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      moveNoButton();
+    });
+
+    yesButton.addEventListener("click", () => {
+      document.getElementById("question").textContent = "Αυτοκτονα ASAP! 🎉";
+      message.textContent = "Thanks for answering!";
+      yesButton.textContent = "Yes! ✓";
+    });
+
+    window.addEventListener("resize", () => {
+      if (noButton.style.position === "fixed") moveNoButton();
+    });
+  </script>
+</body>
+</html>
